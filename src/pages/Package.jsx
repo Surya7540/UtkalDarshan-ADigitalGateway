@@ -67,7 +67,7 @@ const PackageBook = () => {
         for (const key in formData) {
             body += `${key}: ${formData[key]}\n`;
         }
-        const mailtoLink = `mailto:nigammishra826@gmail.com?subject=${encodeURIComponent(
+        const mailtoLink = `mailto:utkaldarshan15@gmail.com?subject=${encodeURIComponent(
             subject
         )}&body=${encodeURIComponent(body)}`;
         window.location.href = mailtoLink;
