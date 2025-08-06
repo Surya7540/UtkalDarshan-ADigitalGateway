@@ -35,7 +35,7 @@ const Header = () => {
                         <li><Link className='underline' to="/Package">Package</Link></li>
                         <li><Link className='underline' to="/Gallery">gallery</Link></li>
                         <li><Link className='underline' to="/Contact">Contact us</Link></li>
-                        <li><Link className='underline ' to="/Register">Login/Register</Link></li>
+                        <li><Link className='underline ' to="/Login">Login/Register</Link></li>
                         {<li><Link className='underline ' to="/Howtoreach">How to reach</Link></li>}
 
                     </ul>
