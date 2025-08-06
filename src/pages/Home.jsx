@@ -684,6 +684,7 @@ const Home = () => {
                         <main className="page-contents">
                             <div className="cards">
                                 <div className="contentt">
+
                                     <h2 className="title">Sambalpur</h2>
                                     <p className="copy">
 

@@ -828,35 +828,35 @@ ul.menu1 {
 }
 
 .cards:nth-child(1):before {
-  background-image: url(image/3rd-waterfall-sambalpur.jpg);
+  background-image: url(assets/image/3rd-waterfall-sambalpur.jpg);
 }
 
 .cards:nth-child(2):before {
-  background-image: url(image/bhubaneswar-visit-place.jpg);
+  background-image: url(assets/image/bhubaneswar-visit-place.jpg);
 }
 
 .cards:nth-child(3):before {
-  background-image: url(image/chandipur-beach-balasore.jpg);
+  background-image: url(assets/image/chandipur-beach-balasore.jpg);
 }
 
 .cards:nth-child(4):before {
-  background-image: url(image/puri-seabeach.jpg);
+  background-image: url(assets/image/puri-seabeach.jpg);
 }
 
 .cards:nth-child(5):before {
-  background-image: url(image/puritemple.jpg);
+  background-image: url(assets/image/puritemple.jpg);
 }
 
 .cards:nth-child(6):before {
-  background-image: url(image/similipal-national-park.jpg);
+  background-image: url(assets/image/similipal-national-park.jpg);
 }
 
 .cards:nth-child(7):before {
-  background-image: url(image/Rourkela.png);
+  background-image: url(assets/image/Rourkela.png);
 }
 
 .cards:nth-child(8):before {
-  background-image: url(image/gopalpur-beach.webp);
+  background-image: url(assets/image/gopalpur-beach.webp);
 }
 
 .contentt {
@@ -1238,27 +1238,27 @@ button {
 }
 
 .firstimg {
-  background-image: url(image/Daringbadi.jpg);
+  background-image: url(assets/image/Daringbadi.jpg);
 }
 
 .secondimg {
-  background-image: url(image/Udayagiri\ and\ Kandagiri\ Caves.jpg);
+  background-image: url(assets/image/Udayagiri\ and\ Kandagiri\ Caves.jpg);
 }
 
 .thirdimg {
-  background-image: url(image/konark.jpg);
+  background-image: url(assets/image/konark.jpg);
 }
 
 .fourthimg {
-  background-image: url(image/Chandipur.jpg);
+  background-image: url(assets/image/Chandipur.jpg);
 }
 
 .fivthimg {
-  background-image: url(image/Barbil.jpg);
+  background-image: url(assets/image/Barbil.jpg);
 }
 
 .sixthimg {
-  background-image: url(image/Shri_Jagannatha_Temple.jpg);
+  background-image: url(assets/image/Shri_Jagannatha_Temple.jpg);
 }
 
 .btn-9 {
