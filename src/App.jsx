@@ -10,7 +10,8 @@ import Contact from './pages/Contact.jsx';
 import Login from './pages/Login.jsx';
 import Gallery from './pages/Gallery.jsx';
 import Howtoreach from './pages/Howtoreach.jsx';
-
+import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import '../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js';
 
 
 const App = () => {

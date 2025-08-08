@@ -218,15 +218,28 @@ export default function PackageBook() {
     const [couponDiscount, setCouponDiscount] = useState(0);
     const [pMarker, setpMarker] = useState(DEFAULT_MAP_CENTER);
     const [dMarker, setdMarker] = useState(DEFAULT_MAP_CENTER);
+    //-- ADDED: State to store the per-night price of the selected hotel.
+    const [hotelFare, setHotelFare] = useState(0);
 
-    // --- Price Logic
+
+    // --- Price Logic ---
     const cabAddon = CAB_OPTIONS.find((c) => c.type === formData.cabType)?.price || 0;
     const nGuests = Math.max(1, parseInt(formData.noGuest) || 1);
-    const totalPrice = nGuests * (selectedPackage.price + cabAddon) - (couponDiscount || 0);
+    //-- ADDED: Calculate the number of nights for the hotel stay.
+    const nights = selectedPackage.duration > 0 ? selectedPackage.duration - 1 : 0;
+    //-- MODIFIED: Total price now includes the hotel fare for the entire stay.
+    const totalPrice = (selectedPackage.price * nGuests) + (hotelFare * nights) + cabAddon - (couponDiscount || 0);
+
+    //-- ADDED: This logic finds the hotel's price whenever the user makes a selection.
+    useEffect(() => {
+        const selectedHotel = HOTELS.find(h => h.name === formData.hotel);
+        setHotelFare(selectedHotel ? selectedHotel.price : 0);
+    }, [formData.hotel]);
 
     useEffect(() => {
         setTimeout(() => setLoaderStatus(false), 900);
     }, []);
+
     useEffect(() => {
         // Set plan by package duration
         let plan = [];
@@ -235,29 +248,34 @@ export default function PackageBook() {
         setDayPlan(plan);
         setFormData((f) => ({
             ...f,
-            checkOut: getEndDate(f.checkIn, selectedPackage.duration - 1),
+            checkOut: getEndDate(f.checkIn, nights),
         }));
-    }, [selectedPackage]);
+    }, [selectedPackage, formData.checkIn, nights]);
+
     useEffect(() => {
-        // City/hotel autocomplete
+        // City autocomplete
         setSuggestedCities(
             formData.city.length >= 2
                 ? CITIES.filter((c) => c.toLowerCase().includes(formData.city.toLowerCase())).slice(0, 3)
                 : []
         );
     }, [formData.city]);
+
     useEffect(() => {
-        setSuggestedHotels(
-            formData.hotel.length >= 2
-                ? HOTELS.filter(
-                    (h) =>
-                        h.name.toLowerCase().includes(formData.hotel.toLowerCase()) &&
-                        (!formData.city ||
-                            h.city.toLowerCase() === formData.city.toLowerCase())
-                ).slice(0, 3)
-                : []
-        );
+        // Hotel autocomplete
+        if (formData.city) {
+            const hotelsInCity = HOTELS.filter(
+                (h) => h.city.toLowerCase() === formData.city.toLowerCase()
+            );
+            const filteredByName = hotelsInCity.filter((h) =>
+                h.name.toLowerCase().includes(formData.hotel.toLowerCase())
+            );
+            setSuggestedHotels(filteredByName);
+        } else {
+            setSuggestedHotels([]);
+        }
     }, [formData.hotel, formData.city]);
+
     useEffect(() => {
         setFormData((f) => ({
             ...f,
@@ -418,7 +436,7 @@ export default function PackageBook() {
                                                         className="dropdown-item"
                                                         style={{ cursor: "pointer" }}
                                                         onClick={() =>
-                                                            setFormData({ ...formData, city: s })
+                                                            setFormData({ ...formData, city: s, hotel: "" })
                                                         }
                                                     >
                                                         {s}
@@ -429,7 +447,7 @@ export default function PackageBook() {
                                     </AnimatePresence>
                                 </div>
                                 <div className="mb-3">
-                                    <label><b>Available Hotel</b> <span className="text-muted"></span></label>
+                                    <label><b> Hotel</b> <span className="text-muted"></span></label>
                                     <input className="form-control" name="hotel" value={formData.hotel}
                                         onChange={handleFormChange}
                                         placeholder="Type hotel name..."
@@ -441,7 +459,7 @@ export default function PackageBook() {
                                                 animate={{ opacity: 1, y: 0 }}
                                                 exit={{ opacity: 0, y: -5 }}
                                                 className="dropdown-menu show mt-0"
-                                                style={{ position: "static" }}
+                                                style={{ position: "static", maxHeight: "200px", overflowY: "auto" }}
                                             >
                                                 {suggestedHotels.map((h) => (
                                                     <div
@@ -453,7 +471,6 @@ export default function PackageBook() {
                                                                 ...formData,
                                                                 hotel: h.name,
                                                                 city: h.city,
-
                                                             })
                                                         }
                                                     >
@@ -481,7 +498,7 @@ export default function PackageBook() {
                                         <input
                                             className="form-control"
                                             type="date"
-                                            value={getEndDate(formData.checkIn, selectedPackage.duration - 1)}
+                                            value={getEndDate(formData.checkIn, nights)}
                                             disabled readOnly
                                         />
                                         <span className="small text-muted">(Auto)</span>
@@ -773,7 +790,7 @@ export default function PackageBook() {
                                         <div className="ms-2">
                                             <div><b>Package:</b> {selectedPackage.title}</div>
                                             <div><b>City/Hotel:</b> {formData.city}, {formData.hotel}</div>
-                                            <div><b>Date:</b> {formData.checkIn} to {getEndDate(formData.checkIn, selectedPackage.duration - 1)}</div>
+                                            <div><b>Date:</b> {formData.checkIn} to {getEndDate(formData.checkIn, nights)}</div>
                                             <div><b>Pickup/Drop:</b>
                                                 {formData.pickup === "MapSelect"
                                                     ? `📍Map (Lat:${pMarker[0].toFixed(3)} ...)`
@@ -800,21 +817,31 @@ export default function PackageBook() {
                                         <b>Fare Breakdown</b>
                                         <ul className="list-group mb-2">
                                             <li className="list-group-item d-flex justify-content-between">
-                                                <span>Base Tour ({selectedPackage.title})</span> <span>₹{selectedPackage.price}</span>
+                                                <span>Base Tour (for {nGuests} Guest{nGuests > 1 ? 's' : ''})</span>
+                                                <span>₹{selectedPackage.price * nGuests}</span>
                                             </li>
+
+                                            {/*-- MODIFIED: This section now correctly displays the hotel fare --*/}
+                                            {hotelFare > 0 && (
+                                                <li className="list-group-item d-flex justify-content-between">
+                                                    <span>Hotel ({nights} night{nights > 1 ? 's' : ''})</span>
+                                                    <span>₹{hotelFare * nights}</span>
+                                                </li>
+                                            )}
+
                                             <li className="list-group-item d-flex justify-content-between">
-                                                <span>Cab ({formData.cabType})</span> <span>₹{cabAddon}</span>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between">
-                                                <span>Guests</span> <span>x{nGuests}</span>
+                                                <span>Cab ({formData.cabType})</span>
+                                                <span>₹{cabAddon}</span>
                                             </li>
                                             {couponDiscount > 0 && (
                                                 <li className="list-group-item d-flex justify-content-between text-success">
-                                                    <span>Coupon</span> <span>-₹{couponDiscount}</span>
+                                                    <span>Coupon</span>
+                                                    <span>-₹{couponDiscount}</span>
                                                 </li>
                                             )}
                                             <li className="list-group-item d-flex justify-content-between fw-bold text-orange-700">
-                                                <span>Total</span> <span>₹{totalPrice}</span>
+                                                <span>Total</span>
+                                                <span>₹{totalPrice}</span>
                                             </li>
                                         </ul>
                                         <div className="mb-2">
