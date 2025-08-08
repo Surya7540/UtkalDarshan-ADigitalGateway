@@ -10,10 +10,67 @@ import "leaflet/dist/leaflet.css";
 const CITIES = ["Bhubaneswar", "Puri", "Konark", "Cuttack", "Chilika", "Gopalpur"];
 const HOTELS = [
     { name: "Mayfair Lagoon", city: "Bhubaneswar", price: 5000 },
-    { name: "Hotel Holiday Resort", city: "Puri", price: 2000 },
-    { name: "Eco Retreat", city: "Konark", price: 300 },
     { name: "Swosti Premium", city: "Bhubaneswar", price: 4500 },
+    { name: "Hotel Holiday Inn", city: "Bhubaneswar", price: 3500 },
+    { name: "Ginger Bhubaneshwar", city: "Bhubaneswar", price: 2500 },
+    { name: "Vivanta Bhubaneswar", city: "Bhubaneswar", price: 6500 },
+    { name: "Welcomhotel ITC", city: "Bhubaneswar", price: 3500 },
+    { name: "Lyfe Hotels", city: "Bhubaneswar", price: 6000 },
+    { name: "Hotel Crown", city: "Bhubaneswar", price: 4000 },
+    { name: "Trident", city: "Bhubaneswar", price: 7000 },
+    { name: "Padmaja Premium", city: "Bhubaneswar", price: 3200 },
+
+    { name: "Hotel Holiday Resort", city: "Puri", price: 2000 },
     { name: "Toshali Sands", city: "Puri", price: 3500 },
+    { name: "Hotel Sonar Bangla", city: "Puri", price: 1800 },
+    { name: "Hotel Kalinga", city: "Puri", price: 1600 },
+    { name: "Sterling Puri", city: "Puri", price: 4500 },
+    { name: "Hotel Golden Palace", city: "Puri", price: 3800 },
+    { name: "Reba Beach Resort", city: "Puri", price: 2800 },
+    { name: "Hotel Durene Beach Resort", city: "Puri", price: 3200 },
+    { name: "Hotel Sonargaon", city: "Puri", price: 1000 },
+    { name: "Seven Hills Hotel", city: "Puri", price: 3000 },
+
+    { name: "Eco Retreat", city: "Konark", price: 3500 },
+    { name: "Lotus Eco Resort", city: "Konark", price: 2500 },
+    { name: "Hotel Surya Inn", city: "Konark", price: 1500 },
+    { name: "OTDC Yatrinivas", city: "Konark", price: 1800 },
+    { name: "Nature Camp", city: "Konark", price: 1700 },
+    { name: "Hotel Golden Palace", city: "Konark", price: 3200 },
+    { name: "Ranihat Palace", city: "Konark", price: 2800 },
+    { name: "Labanya Guest House", city: "Konark", price: 1400 },
+    { name: "Holiday Inn Guest House", city: "Konark", price: 1200 },
+    { name: "Sai Padma Guest House", city: "Konark", price: 1300 },
+
+    { name: "Hotel Akbari Continental", city: "Cuttack", price: 2500 },
+    { name: "Hotel Dwaraka", city: "Cuttack", price: 1500 },
+    { name: "Hotel Blue Lagoon", city: "Cuttack", price: 2000 },
+    { name: "Hotel Sagarshree", city: "Cuttack", price: 2200 },
+    { name: "Panthanivas", city: "Cuttack", price: 1800 },
+    { name: "Hotel Bombay Inn", city: "Cuttack", price: 1700 },
+    { name: "Hotel Ashoka", city: "Cuttack", price: 1900 },
+    { name: "Hotel Shree Jagannath", city: "Cuttack", price: 2100 },
+    { name: "Hotel Monalisa", city: "Cuttack", price: 1600 },
+    { name: "Roxy Resort", city: "Cuttack", price: 2300 },
+
+    { name: "Swosti Chilika Resort", city: "Chilika", price: 3800 },
+    { name: "Vikash Eco Resort", city: "Chilika", price: 3200 },
+    { name: "Bluebay 015 Chilika Berhampura", city: "Chilika", price: 2800 },
+    { name: "Pipul Odi Museum Resort", city: "Chilika", price: 3000 },
+    { name: "Om Leisure Chilika Resort", city: "Chilika", price: 3500 },
+    { name: "Chilika Heritage Resort", city: "Chilika", price: 2200 },
+    { name: "Garuda Luxury Houseboat", city: "Chilika", price: 6000 },
+    { name: "Eco Cottage Chilika Island Resort", city: "Chilika", price: 3400 },
+    { name: "Swosti Chilika Resort", city: "Chilika", price: 3600 },
+    { name: "Blue Bay Resort", city: "Chilika", price: 3100 },
+
+    { name: "Gopalpur Palm Resort", city: "Gopalpur", price: 4000 },
+    { name: "Mayfair Gopalpur", city: "Gopalpur", price: 6000 },
+    { name: "Hotel Swosti", city: "Gopalpur", price: 3500 },
+    { name: "Hotel Sea Pearl", city: "Gopalpur", price: 3000 },
+    { name: "Hotel Swagatika", city: "Gopalpur", price: 2500 },
+    { name: "Hotel Gopalpur Palm Resort", city: "Gopalpur", price: 4500 },
+    { name: "Hotel Blue Bay Beach Resort", city: "Gopalpur", price: 5000 },
 ];
 
 
@@ -372,7 +429,7 @@ export default function PackageBook() {
                                     </AnimatePresence>
                                 </div>
                                 <div className="mb-3">
-                                    <label><b>Preferred Hotel</b> <span className="text-muted"></span></label>
+                                    <label><b>Available Hotel</b> <span className="text-muted"></span></label>
                                     <input className="form-control" name="hotel" value={formData.hotel}
                                         onChange={handleFormChange}
                                         placeholder="Type hotel name..."
