@@ -50,7 +50,7 @@ const Header = () => {
                             ×
                         </Link>
                         <ul className="">
-                            <li><Link to="/tourism-management-system" onClick={closeNav}>home</Link></li>
+                            <li><Link to="/utkaldarshan" onClick={closeNav}>home</Link></li>
                             <li><Link to="/about-us" onClick={closeNav}>about</Link></li>
                             <li><Link to="/Package" onClick={closeNav}>Package</Link></li>
                             <li><Link to="/Gallery" onClick={closeNav}>gallery</Link></li>

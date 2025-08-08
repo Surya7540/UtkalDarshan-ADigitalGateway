@@ -142,7 +142,7 @@ const Contact = () => {
                                     <div className="info">
                                         <div className="information">
                                             <i className="fas fa-map-marker-alt" /> &nbsp; &nbsp;
-                                            <p>Odisha (formerly Orissa), an eastern Indian state on the Bay of Bengal.</p>
+                                            <p>Odisha (formerly Orissa), an eastern Indian state.</p>
                                         </div>
                                         <div className="information">
                                             <i className="fas fa-envelope" /> &nbsp; &nbsp;

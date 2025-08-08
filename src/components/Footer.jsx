@@ -23,7 +23,7 @@ const Footer = () => {
                                             Get in Touch
                                         </h3>
                                         <p>
-                                            Checked out our TSM.
+                                            Checked out our UD.
                                         </p>
                                         <form
                                             action="#"
@@ -67,7 +67,7 @@ const Footer = () => {
                                         </h3>
                                         <ul className="list-unstyled f_list">
                                             <li className="textstyle">
-                                                <Link to="/tourism-management-system">Home</Link>
+                                                <Link to="/utkaldarshan">Home</Link>
                                             </li>
                                             <li>
                                                 <Link to="/about-us"> About</Link>

@@ -9,12 +9,13 @@ import "leaflet/dist/leaflet.css";
 // --- Dummy Data ---
 const CITIES = ["Bhubaneswar", "Puri", "Konark", "Cuttack", "Chilika", "Gopalpur"];
 const HOTELS = [
-    { name: "Mayfair Lagoon", city: "Bhubaneswar" },
-    { name: "Hotel Holiday Resort", city: "Puri" },
-    { name: "Eco Retreat", city: "Konark" },
-    { name: "Swosti Premium", city: "Bhubaneswar" },
-    { name: "Toshali Sands", city: "Puri" },
+    { name: "Mayfair Lagoon", city: "Bhubaneswar", price: 5000 },
+    { name: "Hotel Holiday Resort", city: "Puri", price: 2000 },
+    { name: "Eco Retreat", city: "Konark", price: 300 },
+    { name: "Swosti Premium", city: "Bhubaneswar", price: 4500 },
+    { name: "Toshali Sands", city: "Puri", price: 3500 },
 ];
+
 
 const PACKAGE_DATA = [
     {
@@ -371,7 +372,7 @@ export default function PackageBook() {
                                     </AnimatePresence>
                                 </div>
                                 <div className="mb-3">
-                                    <label><b>Preferred Hotel</b> <span className="text-muted">(autocomplete)</span></label>
+                                    <label><b>Preferred Hotel</b> <span className="text-muted"></span></label>
                                     <input className="form-control" name="hotel" value={formData.hotel}
                                         onChange={handleFormChange}
                                         placeholder="Type hotel name..."
@@ -395,10 +396,11 @@ export default function PackageBook() {
                                                                 ...formData,
                                                                 hotel: h.name,
                                                                 city: h.city,
+
                                                             })
                                                         }
                                                     >
-                                                        {h.name} <span className="text-secondary small">({h.city})</span>
+                                                        {h.name} <span className="text-secondary small">({h.city}) {h.price}</span>
                                                     </div>
                                                 ))}
                                             </motion.div>

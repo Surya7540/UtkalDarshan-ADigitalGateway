@@ -670,7 +670,7 @@ const Home = () => {
                             </div>
                             <div className="wt-separator2 bg-primarys">
                             </div>
-                            {/* <p>Connecting with entrepreneurs online, is just a few clicks away.</p> */}
+                            /* <p>Connecting with entrepreneurs online, is just a few clicks away.</p> */}
                         </div>
                         <div className="container-fluid responiveheading">
                             <h3 class="head3 spacing secondary-color text-center text-uppercase">
@@ -845,7 +845,7 @@ const Home = () => {
                             </div>
                             <div className="wt-separator2 bg-primarys">
                             </div>
-                            {/* <p>Connecting with entrepreneurs online, is just a few clicks away.</p> */}
+                            {/* <p>Connecting with entrepreneurs online, is just a few clicks away.</p> */}}
                         </div>
                         <div className="container p-t80 responiveheading">
                             <h3 class="head3 spacing secondary-color text-center text-uppercase">
