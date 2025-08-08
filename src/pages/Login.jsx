@@ -60,7 +60,7 @@ function Login() {
                 </div>
             ) : (<>
 
-                {/* <h1>Tourism Management System</h1> */}
+                {/* <h1>UtkalDarshan</h1> */}
                 <div className="container-fluid loginbackground ">
                     <div className="row loginstyle" >
                         <div className="col-md-6 ">
@@ -68,7 +68,7 @@ function Login() {
 
                         </div>
                         <div className="col-md-6 ">
-                            <h1>Tourism Management System</h1>
+                            <h1>Utkal Darshan</h1>
                             <form onSubmit={handleSubmit}>
                                 {/* <img src={Loginimage1} className='login-image1' alt="Login" /> */}
                                 <div className="mb-3">
@@ -106,7 +106,7 @@ function Login() {
 
                         </div>
                         <div className="col-md-6 ">
-                            <h1>Tourism Management System</h1>
+                            <h1>UtkalDarshan</h1>
                             <form onSubmit={handleSubmit}>
                                 {/* <img src={Loginimage1} className='login-image1' alt="Login" /> */}
                                 <div className="mb-3">

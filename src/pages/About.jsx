@@ -94,7 +94,7 @@ const About = () => {
                         >
                         </button>
                         <section className="banner2">
-                            {/* <img className="banner" src={image} alt /> */}
+                            <img className="banner" src={smll} alt="banner" />
                             <div className="banner-text-item">
                                 <Slide direction='down'>
                                     <div className="banner-heading">
