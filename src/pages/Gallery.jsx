@@ -111,20 +111,7 @@ const Gallery = () => {
                                     <Slide direction='left'>
                                         <h1 className="heading">The View Of Incrediable<br />Odisha</h1>
                                     </Slide>
-                                    <div className="grid__container">
-                                        <div className="grid__item one" />
-                                        <div className="grid__item two" />
-                                        <div className="grid__item three" />
-                                        <div className="grid__item four" />
-                                        <div className="grid__item five" />
-                                        <div className="grid__item six" />
-                                        <div className="grid__item seven" />
-                                        <div className="grid__item eight" />
-                                        <div className="grid__item nine" />
-                                        <div className="grid__item ten" />
-                                        <div className="grid__item eleven" />
-                                        <div className="grid__item twelve" />
-                                    </div>
+
                                 </div>
                             </div>
                         </div>
