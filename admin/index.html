@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Admin Booking Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 95%;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .loading {
+            text-align: center;
+            font-size: 18px;
+            color: #888;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>All Booking Details</h1>
+        <div id="loading" class="loading">Loading bookings...</div>
+
+        <table id="booking-table" style="display:none;">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Package Code</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Mobile</th>
+                    <th>City</th>
+                    <th>Hotel</th>
+                    <th>Check In</th>
+                    <th>Check Out</th>
+                    <th>Guests</th>
+                    <th>Pickup</th>
+                    <th>Drop</th>
+                    <th>Cab Type</th>
+                    <th>Total Price</th>
+                    <th>Created At</th>
+                </tr>
+            </thead>
+            <tbody id="booking-body"></tbody>
+        </table>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:5500/api/bookings'; // adjust to match your backend route
+
+        async function fetchBookings() {
+            try {
+                const response = await fetch(API_URL);
+                const bookings = await response.json();
+
+                if (!Array.isArray(bookings) || bookings.length === 0) {
+                    document.getElementById('loading').innerText = 'No bookings found.';
+                    return;
+                }
+
+                const tbody = document.getElementById('booking-body');
+                bookings.forEach(booking => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+            <td>${booking.id}</td>
+            <td>${booking.package_code}</td>
+            <td>${booking.name}</td>
+            <td>${booking.email}</td>
+            <td>${booking.mobile_number}</td>
+            <td>${booking.city || ''}</td>
+            <td>${booking.hotel || ''}</td>
+            <td>${booking.check_in || ''}</td>
+            <td>${booking.check_out || ''}</td>
+            <td>${booking.guests}</td>
+            <td>${booking.pickup || ''}</td>
+            <td>${booking.drop_location || ''}</td>
+            <td>${booking.cab_type || ''}</td>
+            <td>${booking.total_price}</td>
+            <td>${new Date(booking.created_at).toLocaleDateString()}</td>
+          `;
+                    tbody.appendChild(row);
+                });
+
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('booking-table').style.display = 'table';
+            } catch (error) {
+                console.error('Error fetching bookings:', error);
+                document.getElementById('loading').innerText = 'Failed to load bookings.';
+            }
+        }
+
+        // Run on page load
+        fetchBookings();
+    </script>
+</body>
+
+</html>

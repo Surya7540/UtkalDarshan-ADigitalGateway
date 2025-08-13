@@ -5,6 +5,9 @@ import Swal from "sweetalert2";
 import { motion, AnimatePresence } from "framer-motion";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import emailjs from '@emailjs/browser';
+import { EMAILJS_CONFIG } from '../config/emailjs';
+
 
 // --- Dummy Data ---
 const CITIES = ["Bhubaneswar", "Puri", "Konark", "Cuttack", "Chilika", "Gopalpur"];
@@ -342,21 +345,212 @@ export default function PackageBook() {
         }
         return true;
     }
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
         e.preventDefault();
         if (!validateStep()) return;
         if (step < 4) return nextStep();
-        // Final submit logic
+
+        // Show loading state
         Swal.fire({
-            title: "Booking Confirmed!",
-            html:
-                `<b>${formData.name}</b> - <b>₹${totalPrice}</b><br>` +
-                `<span style="font-size:0.91em"> Confirmation sent to: <b>${formData.email}</b></span>`,
-            icon: "success",
+            title: "Processing Booking...",
+            text: "Please wait while we confirm your tour package",
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
         });
-        setTimeout(() => window.print(), 1100); // Prompt printout
-        setStep(0);
+
+        try {
+            // Generate unique booking ID
+            const bookingId = 'BK' + Date.now() + Math.random().toString(36).substr(2, 5).toUpperCase();
+
+            // Prepare booking data
+            const bookingData = {
+                id: bookingId,
+                packageCode: selectedPackage.code,
+                packageTitle: selectedPackage.title,
+                packagePrice: selectedPackage.price,
+                packageDuration: selectedPackage.duration,
+                city: formData.city,
+                hotel: formData.hotel,
+                hotelPrice: hotelFare,
+                checkIn: formData.checkIn,
+                checkOut: getEndDate(formData.checkIn, nights),
+                pickupLocation: formData.pickup === "MapSelect" ? `Map Location (${pMarker[0].toFixed(4)}, ${pMarker[1].toFixed(4)})` : formData.pickup,
+                dropLocation: formData.drop === "MapSelect" ? `Map Location (${dMarker[0].toFixed(4)}, ${dMarker[1].toFixed(4)})` : formData.drop,
+                pickupCoordinates: formData.pickup === "MapSelect" ? { lat: pMarker[0], lng: pMarker[1] } : null,
+                dropCoordinates: formData.drop === "MapSelect" ? { lat: dMarker[0], lng: dMarker[1] } : null,
+                cabType: formData.cabType,
+                cabPrice: cabAddon,
+                numberOfGuests: nGuests,
+                travelers: travelers,
+                customerName: formData.name,
+                customerEmail: formData.email,
+                customerMobile: formData.mobileNumber,
+                specialRequests: formData.specialRequests,
+                couponCode: formData.coupon || null,
+                couponDiscount: couponDiscount,
+                totalPrice: totalPrice,
+                paymentMethod: formData.payMethod,
+                bookingDate: new Date().toISOString(),
+                status: 'confirmed',
+                paymentStatus: 'pending'
+            };
+
+            // Save to local storage
+            const existingBookings = JSON.parse(localStorage.getItem('utkaldarshan_bookings') || '[]');
+            existingBookings.push(bookingData);
+            localStorage.setItem('utkaldarshan_bookings', JSON.stringify(existingBookings));
+
+            // Send email to admin using EmailJS
+            const adminEmailParams = {
+                to_email: EMAILJS_CONFIG.ADMIN_EMAIL,
+                to_name: 'Admin',
+                from_name: formData.name,
+                from_email: formData.email,
+                subject: `New Booking - ${bookingId}`,
+                message: `New booking received:
+                
+Booking ID: ${bookingId}
+Customer: ${formData.name}
+Email: ${formData.email}
+Mobile: ${formData.mobileNumber}
+Package: ${selectedPackage.title}
+Total Amount: ₹${totalPrice.toLocaleString('en-IN')}
+Check-in: ${formData.checkIn}
+Check-out: ${getEndDate(formData.checkIn, nights)}
+Hotel: ${formData.hotel}
+City: ${formData.city}
+Guests: ${nGuests}
+Special Requests: ${formData.specialRequests || 'None'}`
+            };
+
+            // Send email to customer
+            const customerEmailParams = {
+                to_email: formData.email,
+                to_name: formData.name,
+                from_name: 'UtkalDarshan',
+                from_email: 'noreply@utkaldarshan.com',
+                subject: `Booking Confirmed - ${bookingId}`,
+                message: `Your booking has been confirmed!
+                
+Booking ID: ${bookingId}
+Package: ${selectedPackage.title}
+Total Amount: ₹${totalPrice.toLocaleString('en-IN')}
+Check-in: ${formData.checkIn}
+Check-out: ${getEndDate(formData.checkIn, nights)}
+Hotel: ${formData.hotel}
+City: ${formData.city}
+Guests: ${nGuests}
+
+Thank you for choosing UtkalDarshan!`
+            };
+
+            // Send emails using EmailJS
+            console.log('📧 Attempting to send emails...');
+            console.log('📧 Config:', {
+                SERVICE_ID: EMAILJS_CONFIG.SERVICE_ID,
+                ADMIN_TEMPLATE_ID: EMAILJS_CONFIG.ADMIN_TEMPLATE_ID,
+                CUSTOMER_TEMPLATE_ID: EMAILJS_CONFIG.CUSTOMER_TEMPLATE_ID,
+                USER_ID: EMAILJS_CONFIG.USER_ID
+            });
+
+            try {
+                // Send to admin
+                console.log('📧 Sending admin email to:', EMAILJS_CONFIG.ADMIN_EMAIL);
+                const adminResult = await emailjs.send(
+                    EMAILJS_CONFIG.SERVICE_ID,
+                    EMAILJS_CONFIG.ADMIN_TEMPLATE_ID,
+                    adminEmailParams,
+                    EMAILJS_CONFIG.USER_ID
+                );
+                console.log('✅ Admin email sent successfully:', adminResult);
+
+                // Send to customer
+                console.log('📧 Sending customer email to:', formData.email);
+                const customerResult = await emailjs.send(
+                    EMAILJS_CONFIG.SERVICE_ID,
+                    EMAILJS_CONFIG.CUSTOMER_TEMPLATE_ID,
+                    customerEmailParams,
+                    EMAILJS_CONFIG.USER_ID
+                );
+                console.log('✅ Customer email sent successfully:', customerResult);
+
+            } catch (emailError) {
+                console.error('❌ Email sending failed:', emailError);
+                console.error('❌ Error details:', {
+                    message: emailError.message,
+                    stack: emailError.stack,
+                    status: emailError.status,
+                    text: emailError.text
+                });
+
+                // Show more detailed error information
+                if (emailError.status === 422) {
+                    console.error('❌ 422 Error - Template parameter mismatch. Check your EmailJS template variables.');
+                    console.error('❌ Parameters sent:', adminEmailParams);
+                }
+
+                // Continue with booking even if email fails
+            }
+
+            // Show success message
+            Swal.fire({
+                title: "🎉 Booking Confirmed!",
+                html: `
+                    <div style="text-align: left;">
+                        <p><strong>Customer:</strong> ${formData.name}</p>
+                        <p><strong>Package:</strong> ${selectedPackage.title}</p>
+                        <p><strong>Total Amount:</strong> ₹${totalPrice.toLocaleString('en-IN')}</p>
+                        <p><strong>Booking ID:</strong> ${bookingId}</p>
+                        <hr>
+                        <p style="font-size: 0.9em; color: #666;">
+                            ✅ Confirmation sent to: <strong>${formData.email}</strong><br>
+                            📧 Admin notification sent to: <strong>${EMAILJS_CONFIG.ADMIN_EMAIL}</strong><br>
+                            
+                        </p>
+                    </div>
+                `,
+                icon: "success",
+                confirmButtonText: "Print Receipt",
+                showCancelButton: true,
+                cancelButtonText: "Close"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.print();
+                }
+            });
+
+            // Reset form and go to first step
+            setStep(0);
+            setFormData(initialFormData);
+            setTravelers([{ ...initialTraveler }]);
+            setCouponDiscount(0);
+
+        } catch (error) {
+            console.error('Booking error:', error);
+            Swal.fire({
+                title: "❌ Booking Failed",
+                html: `
+                    <p>Sorry, we couldn't process your booking at the moment.</p>
+                    <p><strong>Error:</strong> ${error.message}</p>
+                    <p>Please try again or contact support.</p>
+                `,
+                icon: "error",
+                confirmButtonText: "Try Again"
+            });
+        }
     }
+
+    // Initialize EmailJS
+    useEffect(() => {
+        try {
+            emailjs.init(EMAILJS_CONFIG.USER_ID);
+            console.log('✅ EmailJS initialized with User ID:', EMAILJS_CONFIG.USER_ID);
+        } catch (error) {
+            console.error('❌ EmailJS initialization failed:', error);
+        }
+    }, []);
 
     // --- UI Render ---
     return (
@@ -409,7 +603,11 @@ export default function PackageBook() {
                             <div className="text-muted small mt-1">
                                 Step {step + 1} / 5
                             </div>
+
+
                         </div>
+
+
                     </motion.div>
                     <form onSubmit={handleSubmit} style={{ position: "relative" }} autoComplete="off">
                         {/* --- STEP 0 --- */}

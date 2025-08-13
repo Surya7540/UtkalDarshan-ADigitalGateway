@@ -74,7 +74,7 @@ const App = () => {
 
 
           <Route
-            path="/admin/dashboard"
+            path="/admin_dashboard"
             element={
 
               <AdminDashboard />

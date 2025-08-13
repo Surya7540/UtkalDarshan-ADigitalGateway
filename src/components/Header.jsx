@@ -26,7 +26,7 @@ const Header = () => {
         <div>
             {/* Marquee banner */}
             <div className="container-fluid con">
-                <marquee>UTKALDARSHAN - A DIGITAL GATEWAY TO ODISHA'S HERITAGE</marquee>
+                <marquee>UTKALDARSHAN - A DIGITAL GATEWAY TO ODISHA'S HERITAGE.     <a href="https://warehouse.appilix.com/uploads/app-apk-689af01273dfb-1754984466.apk" style={{ textDecoration: "none" }}>Download our app and get 25% off on your first booking</a></marquee>
             </div>
 
             {/* Main Navbar */}
