@@ -551,6 +551,49 @@ Thank you for choosing UtkalDarshan!`
             console.error('❌ EmailJS initialization failed:', error);
         }
     }, []);
+    const handleRazorpayPayment = async () => {
+        try {
+            // Create order in backend
+            const response = await fetch("http://localhost:4000/api/create-order", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ amount: totalPrice }), // ₹2499
+            });
+
+            const data = await response.json();
+            const order = data.order;
+
+            const options = {
+                key: "rzp_test_Sb027JS0JFaihL", // your Razorpay key_id
+                amount: order.amount,
+                currency: order.currency,
+                order_id: order.id,
+                handler: async function (response) {
+                    const verifyRes = await fetch(
+                        "http://localhost:4000/api/verify-payment",
+                        {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(response),
+                        }
+                    );
+                    const verifyData = await verifyRes.json();
+                    alert(verifyData.success ? "Payment successful!" : "Payment failed!");
+                },
+                prefill: {
+                    name: formData.name,
+                    email: formData.email,
+                    contact: formData.phone,
+                },
+                theme: { color: "#3399cc" },
+            };
+
+            const rzp = new window.Razorpay(options);
+            rzp.open();
+        } catch (err) {
+            console.error(err);
+        }
+    };
 
     // --- UI Render ---
     return (
@@ -1051,9 +1094,19 @@ Thank you for choosing UtkalDarshan!`
                                                 onChange={handleFormChange}
                                             >
                                                 <option>Pay at Arrival</option>
-                                                <option>Pay Online (DEMO)</option>
+                                                <option>Pay Online </option>
                                             </select>
                                         </div>
+                                        {formData.payMethod === "Pay Online" && (
+                                            <button
+                                                type="button" // ✅ prevents form submit
+                                                onClick={handleRazorpayPayment}
+                                                className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 w-full mt-3"
+                                            >
+                                                Pay ₹{totalPrice} Now
+                                            </button>
+                                        )}
+
                                     </div>
                                     <div className="mt-3 text-end">
                                         <button className="btn btn-outline-dark mx-1" type="button" onClick={prevStep}>Back</button>
